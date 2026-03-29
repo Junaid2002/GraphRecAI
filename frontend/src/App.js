@@ -1,24 +1,33 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
-  const [message, setMessage] = useState("");
-
-  useEffect(() => {
-    axios.get("http://localhost:8000/api/test")
-      .then((res) => {
-        setMessage(res.data.message);
-      })
-      .catch((err) => {
-        console.error("Error:", err);
-      });
-  }, []);
+  const token = localStorage.getItem("token");
 
   return (
-    <div style={{ textAlign: "center", marginTop: "100px" }}>
-      <h1>GraphRecAI</h1>
-      <h2>{message}</h2>
-    </div>
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}>
+      <Router>
+        <Routes>
+          {}
+          <Route path="/" element={<Login />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+
+          {}
+          <Route
+            path="/dashboard"
+            element={token ? <Dashboard /> : <Navigate to="/" />}
+          />
+
+          {}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </GoogleOAuthProvider>
   );
 }
 

@@ -1,7 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.routes.auth_routes import router as auth_router
+
 app = FastAPI()
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -11,6 +14,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/api/test")
-def test_connection():
-    return {"message": "Backend Connected Successfully "}
+
+app.include_router(auth_router, prefix="/api")
+
+
+@app.get("/")
+def root():
+    return {"message": "GraphRecAI Backend is Running 🚀"}
